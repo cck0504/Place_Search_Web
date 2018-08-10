@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SearchForm</title> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://maps.google.com/maps/api/js?libraries=placeses,visualization,drawing,geometry,places&key=AIzaSyCCaBOXOiTklc0XHw3zFYLC8w_R9hNA9dc"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> 
+    <script src="https://code.angularjs.org/1.6.9/angular.js"></script>
+    <script src="https://code.angularjs.org/1.6.9/angular-animate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+    <script src="https://rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.js"></script>
+    <script src="moment.js"></script>
+    <script src="script.js"></script>
+  </head>
+
+  <body ng-app="googleSearch" ng-controller="SearchCtrl">
+    <div class="container-fluid">
+      <div class="form_wrap col col-lg-12">
+        <form class="form_box needs-validation" novalidate name="searchForm" ng-submit="nearbySearch(keyword, type, radius, loc_enter)">
+          <div class="row justify-content-center">
+            <h4 class="text-center">Travel and Entertainment Search</h4>
+          </div>
+          <div class="form-group row" >
+            <label for="keyword" class="col-sm-2 col-form-label">Keyword</label>
+            <div class="col-sm-6">
+              <input ng-model="keyword" ng-style="key_style" type="text" id="keyword" class="form-control keyword" name="keyword" required>
+              <span ng-show="keywordValid()" style="color:red">Please enter a keyword</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="type" class="col-sm-2">Category</label>
+            <div class="col-sm-4">
+              <select ng-model="type" class="form-control" name="type" id="type">
+                <option selected>Default</option>
+                <option>Accounting</option>
+                <option>Airport</option>
+                <option>Amusement Park</option>
+                <option>Aquarium</option>
+                <option>Art Gallery</option>
+                <option>ATM</option>
+                <option>Bakery</option>
+                <option>Bank</option>
+                <option>Bar</option>
+                <option>Beauty Salon</option>
+                <option>Bicycle Store</option>
+                <option>Book Store</option>
+                <option>Bowling Alley</option>
+                <option>Bus Station</option>
+                <option>Cafe</option>
+                <option>Campground</option>
+                <option>Car Dealer</option>
+                <option>Car Rental</option>
+                <option>Car Repair</option>
+                <option>Car Wash</option>
+                <option>Casino</option>
+                <option>Cemetery</option>
+                <option>Church</option>
+                <option>City Hall</option>
+                <option>Clothing Store</option>
+                <option>Convinience Store</option>
+                <option>Courthouse</option>
+                <option>Dentist</option>
+                <option>Department Store</option>
+                <option>Doctor</option>
+                <option>Electrician</option>
+                <option>Electronics Store</option>
+                <option>Embassy</option>
+                <option>Fire Station</option>
+                <option>Florist</option>
+                <option>Funeral Home</option>
+                <option>Furniture Store</option>
+                <option>Gas Station</option>
+                <option>Gym</option>
+                <option>Hair Care</option>
+                <option>Hardware Store</option>
+                <option>Hindu Temple</option>
+                <option>Home Goods Store</option>
+                <option>Hospital</option>
+                <option>Insurance Agency</option>
+                <option>Jewelry Store</option>
+                <option>Laundry</option>
+                <option>Lawyer</option>
+                <option>Library</option>
+                <option>Liquor Store</option>
+                <option>Local Government Office</option>
+                <option>Locksmith</option>
+                <option>Lodging</option>
+                <option>Meal Delivery</option>
+                <option>Meal Takeaway</option>
+                <option>Mosque</option>
+                <option>Movie Rental</option>
+                <option>Movie Theater</option>
+                <option>Moving Company</option>
+                <option>Museum</option>
+                <option>Night Club</option>
+                <option>Painter</option>
+                <option>Park</option>
+                <option>Parking</option>
+                <option>Pet Store</option>
+                <option>Pharmacy</option>
+                <option>Physiotherapist</option>
+                <option>Plumber</option>
+                <option>Police</option>
+                <option>Post Office</option>
+                <option>Real Estate Agency</option>
+                <option>Restaurant</option>
+                <option>Roofing Contractor</option>
+                <option>RV Park</option>
+                <option>School</option>
+                <option>Shoe Store</option>
+                <option>Shopping Mall</option>
+                <option>Spa</option>
+                <option>Stadium</option>
+                <option>Storage</option>
+                <option>Store</option>
+                <option>Subway Station</option>
+                <option>Supermarket</option>
+                <option>Synagogue</option>
+                <option>Taxi Stand</option>
+                <option>Train Station</option>
+                <option>Transit Station</option>
+                <option>Travel Agency</option>
+                <option>Veterinary Care</option>
+                <option>Zoo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="radius" class="col-sm-2">Distance(miles)</label>
+            <div class="col-sm-4">
+              <input ng-model="radius" class="form-control" type="text" name="radius" id="radius" placeholder="10">
+            </div>
+          </div>
+          <fieldset class="form-group" >
+            <div class="row">
+              <legend class="col-form-label col-sm-2 pt-0">From</legend>
+              <div class="col-sm-6">
+                <div class="form-check">
+                  <input ng-model="loc_radio" ng-click="clickCurrent()" class="form-check-input" type="radio" name="loc_radio" id="current" value="current" checked>
+                  <label class="form-check-label" for="current">
+                    Current Location
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input ng-model="loc_radio" ng-click="clickOther()" class="form-check-input" type="radio" name="loc_radio" id="other" value="other">
+                  <label class="form-check-label" for="exampleRadios2">
+                    Other. Please specify:
+                  </label>
+                </div>
+                <div class="form-group">
+                  <input ng-style="loc_style" ng-model="loc_enter" ng-required="loc_flag" ng-disabled="!loc_flag" autocomplete class="form-control" type="text" name="loc_enter" placeholder="Enter a location">
+                  <span ng-show="locationValid()" style="color:red">Please enter a location</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <div class="form-group row">
+            <label class="col-sm-2">&#160;</label>
+            <div class="col-sm-6">
+              <button type="submit" class="btn btn-primary" ng-disabled="submitValid()"><span class="fa fa-search"></span> Search</button>
+              <button type="reset" class="btn btn-outline-secondary" ng-click="clear()">Clear</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div><br></div>
+
+    <div class="container-fluid">
+      <div class="row justify-content-center" ng-show="!favFlag">
+        <button type="button" class="btn btn-primary" ng-click="showResult()">Results</button>
+        <button type="button" class="btn btn-link" ng-click="showFav()">Favorites</button>
+      </div>
+      <div class="row justify-content-center" ng-show="favFlag">
+        <button type="button" class="btn btn-link" ng-click="showResult()">Results</button>
+        <button type="button" class="btn btn-primary" ng-click="showFav()">Favorites</button>
+      </div>
+    </div>
+
+    <div><br><br></div>
+
+    <!-- nearby table-->
+    <div class="show-search" ng-show="searchTable">
+      <div class="container-fluid d-block" ng-show="nearbyBlock">
+        <div ng-show="!noRecord_near && !error_near">
+          <div class="container-fluid">
+           <div class="row justify-content-end">
+              <button type="button" class="btn btn-outline-secondary" ng-click="showDetail_prev()" ng-disabled="!current_id"><span>Details </span><span class="fa fa-chevron-right"></span></button>
+            </div>      
+          </div>
+          <div><br></div>
+          <div class="row">
+            <div class="col col-lg-12 col-xs-12">
+              <table class="table table-hover table-responsive w-100 d-block d-md-table oneline">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Category</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Favorite</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody ng-repeat="item in data" ng-class="{ selected : item.place_id == pickedID }">
+                  <tr>
+                    <td width=5%>{{nearbyCnt*20 + $index+1}}</td>
+                    <td width=15%><img class="img-circle" width="35px" height="35px" src={{item.icon}}></td>
+                    <td width=30%>{{item.name}}</td>
+                    <td width=30%>{{item.vicinity}}</td>
+                    <td width=10%>
+                      <span ng-show="!checkFav(item.place_id)">
+                        <button type="button" class="btn btn-outline-secondary" ng-click="saveFav(item.icon, item.name, item.vicinity, item.place_id, item.geometry.location.lat, item.geometry.location.lng)" ><span class="fa fa-star-o"></span></button>
+                      </span>
+                      <span ng-show="checkFav(item.place_id)">
+                        <button type="button" class="btn btn-outline-secondary" ng-click="deleteFav(item.place_id)" ng-show="checkFav(item.place_id)"><span class="fa fa-star" style="color:yellow;"></span></button>
+                      </span>
+                    </td>
+                    <td width=10%><button type="button" class="btn btn-outline-secondary" ng-click="showDetail(item.place_id, item.geometry.location.lat, item.geometry.location.lng)"><span class="fa fa-chevron-right"></span></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- prev and next button-->
+          <div class="container-fluid">
+            <div class="row justify-content-center">
+              <button type="button" class="btn btn-outline-dark" ng-click="prev()" ng-show="nearPrevBtn"><span>Previous</span></button>
+              <button type="button" class="btn btn-outline-dark" ng-click="next()" ng-show="nearNextBtn"><span>Next</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- no record -->
+        <div class="container-fluid" ng-show="noRecord_near">
+          <div class="alert alert-warning" role="alert">
+            No records.
+          </div>
+        </div>
+        <!-- error message -->
+        <div class="container-fluid" ng-show="error_near">
+          <div class="alert alert-danger" role="alert">
+            Fail to get search results.
+          </div>
+        </div>
+      </div>
+
+      <!-- favorite table-->
+      <div class="container-fluid d-block" ng-show="favBlock">
+        <div ng-show="!noRecord_fav">
+          <div class="container-fluid ">
+            <div class="row justify-content-end">
+              <button type="button" class="btn btn-outline-secondary" ng-click="showDetail_prev()" ng-disabled="!current_id"><span>Details </span><span class="fa fa-chevron-right"></span></button>
+            </div>
+          </div>
+          <div><br></div>
+          <div class="row">
+            <div class="col col-lg-12 col-xs-12">
+              <table class="table table-hover table-responsive w-100 d-block d-md-table oneline">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Category</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Favorite</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody ng-repeat="item in favData" ng-class="{ selected : item[3] == pickedID }">
+                  <tr >
+                    <td width=5%>{{favCnt*20 + $index+1}}</td>
+                    <td width=15%><img class="img-circle" width="35px" height="35px" src={{item[0]}}></td>
+                    <td width=30%>{{item[1]}}</td>
+                    <td width=30%>{{item[2]}}</td>
+                    <td width=10%>
+                      <button type="button" class="btn btn-outline-dark" ng-click="deleteFav(item[3])"><span class="fa fa-trash"></span></button>
+                    </td>
+                    <td width=10%><button type="button" class="btn btn-outline-secondary" ng-click="showDetail(item[3], item[4], item[5])"><span class="fa fa-chevron-right"></span></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- prev and next button-->
+          <div class="container-fluid">
+            <div class="row justify-content-center">
+              <button type="button" class="btn btn-outline-dark" ng-click="prev()" ng-show="favPrevBtn"><span>Previous</span></button>
+              <button type="button" class="btn btn-outline-dark" ng-click="next()" ng-show="favNextBtn"><span>Next</span></button>
+            </div>
+          </div>
+        </div>
+        <!-- no record bar-->
+        <div class="container-fluid" ng-show="noRecord_fav">
+          <div class="alert alert-warning" role="alert">
+            No records.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- detail response data-->
+    <div class="container-fluid show-detail" ng-show="detailBlock">
+      <div ng-show="!error_detail">
+        <div class="row justify-content-center"><h4 class="text-center">{{detailName}}</h4></div>
+        <div class="row d-flex justify-content-end">
+          <div class="mr-auto p-2">
+            <div class="text-left">
+              <button type="button" class="btn btn-outline-secondary" ng-click="list(detail.place_id)">
+                <span class="fa fa-chevron-left"></span><span>List</span>
+              </button>
+            </div>
+          </div>
+          <div class="p-2">
+            <div class="text-right">
+              <span ng-show="!checkFav(detail.place_id)">
+                <button type="button" class="btn btn-outline-secondary" ng-click="saveFav(detail.icon, detail.name, detail.vicinity, detail.place_id, detail.geometry.location.lat, detail.geometry.location.lng)"><span class="fa fa-star-o"></span></button>
+              </span>
+              <span ng-show="checkFav(detail.place_id)">
+                <button type="button" class="btn btn-outline-secondary" ng-click="deleteFav(detail.place_id)">
+                  <span class="fa fa-star" style="color:yellow;"></span>
+                </button>
+              </span>
+              <button type="button" class="btn btn-default twitter" ng-click="twitter(detail.name,detail.vicinity,googleUrl, website)">
+                <img src="http://cs-server.usc.edu:45678/hw/hw8/images/Twitter.png" width="40px" style="border:0">
+              </button>
+            </div>
+          </div>
+        </div>
+        <div><br></div>
+        <div class="row" ng-if="detailBlock">
+          <div class="col col-lg-12 col-xs-12">
+            <ul class="nav nav-tabs justify-content-end">
+              <li class="nav-item col-xs-3">
+                <a class="nav-link active" data-toggle="tab" ng-click="showInfo()" value="info">Info</a>
+              </li>
+              <li class="nav-item col-xs-3">
+                <a class="nav-link" data-toggle="tab" ng-click="showPhoto()" value="photo">Photo</a>
+              </li>
+              <li class="nav-item col-xs-3">
+                <a class="nav-link" data-toggle="tab" ng-click="showMap()" value="map">Map</a>
+              </li>
+              <li class="nav-item col-xs-3">
+                <a class="nav-link" data-toggle="tab" ng-click="showReview()" value="reviews">Reviews</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div><br></div>
+        <!-- info tab -->
+        <div class="row">
+          <div class="container-fluid" ng-show="infoBlock">
+            <div class="col col-lg-12 col-xs-12">
+              <table class="table table-striped table-responsive w-100 d-block d-md-table oneline">
+                <tbody>
+                  <tr ng-if="detailAdd">
+                    <th>Address</th>
+                    <td>{{detailAdd}}</td>
+                  </tr>
+                  <tr ng-if="detailPhone">
+                    <th>Phone Number</th>
+                    <td>{{detailPhone}}</td>
+                  </tr>
+                  <tr ng-if="detailPrice">
+                    <th>Price Level</th>
+                    <td>{{detailPrice}}</td>
+                  </tr>
+                  <tr ng-if="detailRate">
+                    <th>Rating</th>
+                    <td>{{detailRate}}
+                      <span class="rating">
+                        <rate-yo rating="detailRate"></rate-yo>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr ng-if="googleUrl">
+                    <th>Google Page</th>
+                    <td><a target="_blank" href="{{googleUrl}}">{{googleUrl}}</a></td>
+                  </tr>
+                  <tr ng-if="website">
+                    <th>Website</th>
+                    <td><a target="_blank" href={{website}}>{{website}}</a></td>
+                  </tr>
+                  <tr ng-if="detailHour">
+                    <th>Hours</th>
+                    <td>{{detailHour}}
+                      <a href="#" data-toggle="modal" data-target="#modalCenter"> Daily open hours </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- TODO: rephrase modal -->
+            <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="centerTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="longTitle">Open Hours</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th>{{day_words_after[0]}}</th>
+                          <th width=50%>{{hours_after[0]}}</th>
+                        </tr>
+                        <tr>
+                          <td>{{day_words_after[1]}}</td>
+                          <td width=50%>{{hours_after[1]}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{day_words_after[2]}}</td>
+                          <td width=50%>{{hours_after[2]}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{day_words_after[3]}}</td>
+                          <td width=50%>{{hours_after[3]}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{day_words_after[4]}}</td>
+                          <td width=50%>{{hours_after[4]}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{day_words_after[5]}}</td>
+                          <td width=50%>{{hours_after[5]}}</td>
+                        </tr>
+                        <tr>
+                          <td>{{day_words_after[6]}}</td>
+                          <td width=50%>{{hours_after[6]}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- photo tab -->
+        <div class="row">
+          <div class="container-fluid" ng-show="photoBlock">
+            <div class="!noRecord_photo">
+              <div class="row_">
+                <div class="col_" >
+                  <span ng-repeat="photo in photo_col1">
+                    <a target="_blank" href="{{photo}}"><img src="{{photo}}" style="width:100%"></a>
+                  </span>
+                </div>
+                <div class="col_">
+                  <span ng-repeat="photo in photo_col2">
+                    <a target="_blank" href="{{photo}}"><img src="{{photo}}" style="width:100%"></a>
+                  </span>
+                </div>
+                <div class="col_">
+                  <span ng-repeat="photo in photo_col3">
+                    <a target="_blank" href="{{photo}}"><img src="{{photo}}" style="width:100%"></a>
+                  </span>
+                </div>
+                <div class="col_">
+                  <span ng-repeat="photo in photo_col4">
+                    <a target="_blank" href="{{photo}}"><img src="{{photo}}" style="width:100%"></a>
+                  </span>
+                </div>            
+              </div>
+            </div>
+            <!-- no photo record -->
+            <div class="container-fluid" ng-show="noRecord_photo">
+              <div class="alert alert-warning" role="alert">
+                No records.
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- map tab -->
+        <div class="row" ng-show="mapBlock">
+          <div class="container-fluid justify-content-center">
+            <form name="directionForm" ng-submit="getDirection(from, mode)">
+              <div class="form-row container-fluid">
+                <div class="col-lg-4 col-xs-12">
+                  <label for="from" class="col-form-label">From</label>
+                  <input ng-model="from" autocomplete type="text" id="from" class="form-control" name="from">
+                </div>
+                <div class="col-lg-4 col-xs-12" >
+                  <label for="to" class="col-form-label">To</label>
+                  <input ng-model="to" type="text" id="to" class="form-control" name="to" readonly>
+                </div>
+                <div class="col-lg-2 col-xs-12">
+                  <label for="mode" class="col-form-label">Travel Mode</label>
+                  <select ng-model="mode" class="form-control form-control" name="mode" id="mode">
+                    <option selected>Driving</option>
+                    <option>Bicycling</option>
+                    <option>Transit</option>
+                    <option>Walking</option>
+                  </select>
+                </div>
+                <div class="col-lg-2 col-xs-12">
+                  <div class="btn-toolbar">
+                    <label for="map_dir" class="control-group col-form-label">&#160;&#160;&#160;&#160;&#160;&#160;</label>
+                  </div>
+                  <button type="submit" class="btn btn-primary" ng-disabled="dirChange(from)" name="map_dir" id="map_dir">
+                    Get Directions
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="row container-fluid">
+            <div class="col">
+              <span ng-show="pegman">
+                <button class="btn btn-outline-default" type="button" ng-click="getStreet()"><img src="http://cs-server.usc.edu:45678/hw/hw8/images/Pegman.png" width="40px"></button>
+              </span>
+              <span ng-show="mapIcon">
+                <button class="btn btn-outline-default" type="button" ng-click="getMap()"><img src="http://cs-server.usc.edu:45678/hw/hw8/images/Map.png" width="40px"></button>
+              </span>
+            </div>
+          </div>
+          <div ng-show="mapView" class= "row container-fluid">
+            <div class="col col-lg-12">
+              <ng-map center="[{{detailLat}},{{detailLon}}]">
+                <div ng-if="marker"><marker position="[{{detailLat}},{{detailLon}}]" title="hello"></marker></div>
+                
+                <div ng-if="direction">
+                  <directions 
+                  travel-mode="{{MODE}}"
+                  panel="directions-panel"
+                  provide-route-alternatives="true"
+                  origin="{{origin}}"
+                  destination="{{to}}">
+                  </directions>
+                </div>
+              </ng-map>          
+            </div>
+          </div>
+          <div ng-show="streetView" class= "row container-fluid">
+            <div class="col col-lg-12" id="street-view">
+              <ng-map street-view="StreetViewPanorama(document.querySelector('#street-view'), {position: new google.maps.LatLng({{detailLat}},{{detailLon}})})">
+                <marker position="[{{detailLat}},{{detailLon}}]"></marker>
+              </ng-map>
+            </div>
+          </div>
+          <div class="row container-fluid" ng-if="mapBlock">
+            <div class="col col-lg-12">
+              <div id="directions-panel" style="width: 100%; float:left; height: 100%; overflow: auto; padding: 0px 5px"></div>
+            </div>
+          </div>
+
+        </div>
+        <!-- review tab -->
+        <div class="row">
+          <div class="container-fluid" ng-show="reviewBlock">
+            <div class="btn-group"> 
+              <div class="dropdown btn-group">
+                <button  class="btn btn-secondary dropdown-toggle" type="button" id="brand" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span>{{selectBrand}}</span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="brand">
+                  <a class="dropdown-item" ng-click="clickGoogle()">Google Reviews</a>
+                  <a class="dropdown-item" ng-click="clickYelp()">Yelp Reviews</a>
+                </div>
+              </div>
+              <div class="btn-toolbar">&#160;</div>
+              <div class="dropdown btn-group">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="sort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span>{{selectOrder}}</span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="sort" >
+                  <a class="dropdown-item" ng-click="default()">Default Order</a>
+                  <a class="dropdown-item" ng-click="high()">Highest Rating</a>
+                  <a class="dropdown-item" ng-click="low()">Lowest Rating</a>
+                  <a class="dropdown-item" ng-click="most()">Most Recent</a>
+                  <a class="dropdown-item" ng-click="least()">Least Recent</a>
+                </div>
+              </div>
+            </div>
+            <!-- review in google -->
+            <div ng-show="showGoogle" class="fade-g">
+              <div ng-show="!noRecord_google">
+                <div class="container-fluid" >
+                  <div class="row justify-content-center">
+                    <div class="col-lg-12 col-xs-12 border" ng-repeat="item in detailReviews">
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td class="align-baseline">
+                              <a target="_blank" href="{{item[0]}}"><img src="{{item[1]}}" width="50px"></a>
+                            </td>
+                            <td>
+                              <div><a target="_blank" href="{{item[0]}}">{{item[2]}}</a></div>
+                              <div>
+                                <!-- rate -->
+                                <rate-yo rating="item[3]"></rate-yo>
+                                <!-- date -->
+                                {{item[6]}}
+                              </div>
+                              <!-- review -->
+                              <div>{{item[7]}}</div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid" ng-show="noRecord_google">
+                <div class="alert alert-warning" role="alert">
+                  No records.
+                </div>
+              </div>
+            </div>
+            <!-- review in yelp -->
+            <div ng-show="showYelp" class="fade-y">
+              <div ng-show="!noRecord_yelp && !error_yelp">
+                <div class="container-fluid">
+                  <div class="row border justify-content-center">
+                    <div class="col-lg-12 col-xs-12 border" ng-repeat="item in yelpReviews_copy">
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td class="align-baseline">
+                              <a target="_blank" href="{{item[0]}}"><img src="{{item[1]}}" width="50px" style="border-radius:50%"></a>
+                            </td>
+                            <td>
+                              <div><a target="_blank" href="{{item[0]}}">{{item[2]}}</a></div>
+                              <div>
+                                <!-- rate -->
+                                <rate-yo rating="item[3]"></rate-yo>
+                                <!-- date -->
+                                {{item[6]}}
+                              </div>
+                              <!-- review -->
+                              <div>{{item[7]}}</div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid" ng-show="noRecord_yelp">
+                <div class="alert alert-warning" role="alert">
+                  No records.
+                </div>
+              </div>
+              <div class="container-fluid" ng-show="error_yelp">
+                <div class="alert alert-danger" role="alert">
+                  Fail to get yelp result.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid" ng-show="error_detail">
+        <div class="alert alert-danger" role="alert">
+          Fail to get detail result.
+        </div>
+      </div>
+    </div>
+
+    <!-- progress bar-->
+    <div class="container-fluid" ng-show="progressBlock">
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+          <span class="sr-only">50% Complete</span>
+        </div>
+      </div>
+    </div>
+
+  </body>
+
+</html>

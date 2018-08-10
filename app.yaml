@@ -1,0 +1,25 @@
+runtime: php55
+api_version: 1
+
+handlers:
+
+- url: /(.*\.css)
+  mime_type: text/css
+  static_files: \1
+  upload: (.*\.css)
+  secure: always
+
+- url: /(.*\.js)
+  mime_type: text/javascript
+  static_files: \1
+  upload: (.*\.js)
+  secure: always
+
+- url: /
+  static_files: index.html
+  upload: index.html
+  secure: always
+
+- url: /.+
+  script: search.php
+  secure: always
